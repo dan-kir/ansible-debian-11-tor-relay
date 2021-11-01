@@ -1,0 +1,9 @@
+- name: Restart firewalld
+  ansible.builtin.systemd:
+    name: firewalld.service
+    state: restarted
+
+- name: Restart tor
+  ansible.builtin.systemd:
+    name: tor@default.service
+    state: restarted

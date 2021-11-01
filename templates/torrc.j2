@@ -1,0 +1,23 @@
+Log notice file /var/log/tor/notices.log
+RunAsDaemon 1
+ORPort {{ tor_orport }}
+ControlPort {{ tor_controlport }}
+DirPort {{ tor_dirport }}
+DirPortFrontPage /etc/tor/{{ tor_exit_notice_file }}
+Nickname {{ tor_nickname }}
+ContactInfo {{ tor_contact_info }}
+RelayBandwidthRate {{ tor_bandwidth_rate }} MBytes
+RelayBandwidthBurst {{ tor_bandwidth_burst }} MBytes
+BandwidthRate {{ tor_bandwidth_rate }} MBytes
+BandwidthBurst {{ tor_bandwidth_burst }} MBytes
+AccountingStart day 0:00
+AccountingMax {{ tor_accounting_max }} GBytes
+AccountingRule sum
+{% if tor_exit_enabled | bool %}
+{% for entry in tor_exit_policy %}
+ExitPolicy {{entry}}
+{% endfor %}
+{% else %}
+ExitRelay 0
+ExitPolicy reject *:*
+{% endif %}

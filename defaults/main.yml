@@ -1,0 +1,54 @@
+---
+tor_distribution_release: "{{ ansible_lsb.codename }}"
+
+tor_orport: 9001
+tor_dirport: 80
+tor_controlport: 9051
+
+tor_firewalld_config_enabled: yes
+
+## This user is created during package install
+tor_user: debian-tor
+
+## Will relay is exit is not enabled
+tor_exit_enabled: yes
+tor_exit_notice_enabled: yes
+
+tor_nickname: "{{ machine_hostname }}"
+
+tor_contact_info: "admin@email.com"
+
+tor_bandwidth_rate: 1 #MBytes
+tor_bandwidth_burst: 3 #MBytes
+tor_accounting_max: 80 #GBytes
+
+tor_exit_notice_file: tor-exit-notice.html
+
+tor_data_dir: /var/lib/tor
+tor_config_dir: /etc/tor/
+
+tor_exit_policy:
+  - accept *:20-21     # FTP
+  - accept *:43        # WHOIS
+  - accept *:53        # DNS
+  - accept *:80        # HTTP
+  - accept *:110       # POP3
+  - accept *:143       # IMAP
+  - accept *:220       # IMAP3
+  - accept *:443       # HTTPS
+  - accept *:873       # rsync
+  - accept *:989-990   # FTPS
+  #- accept *:991       # NAS Usenet
+  #- accept *:992       # TELNETS
+  - accept *:993       # IMAPS
+  - accept *:995       # POP3S
+  #- accept *:1194      # OpenVPN
+  #- accept *:1293      # IPSec
+  - accept *:3690      # SVN Subversion
+  - accept *:4321      # RWHOIS
+  - accept *:5222-5223 # XMPP, XMPP SSL
+  - accept *:5228      # Android Market
+  - accept *:9418      # git
+  - accept *:11371     # OpenPGP hkp
+  - accept *:64738     # Mumble
+  - reject *:*
