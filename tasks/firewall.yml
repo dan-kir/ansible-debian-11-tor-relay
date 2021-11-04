@@ -1,0 +1,63 @@
+---
+- name: Firewall - Install firewall packages
+  ansible.builtin.apt:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - nftables
+    - firewalld
+
+- name: Firewall - Check that Firewalld conf exists
+  ansible.builtin.stat:
+    path: /etc/firewalld/firewalld.conf
+  register: firewalld_conf
+  check_mode: no
+
+- name: Firewall - Adjust Firewalld configurations
+  ansible.builtin.lineinfile:
+    dest: "{{ item.config }}"
+    regexp: '^#?{{ item.parameter }}\s*='
+    line: "{{ item.parameter }}={{ item.value }}"
+  with_items: "{{ firewalld_config }}"
+  when:
+    - firewalld_conf.stat.exists
+  notify:
+    - Restart firewalld
+
+- name: Firewall - Start and enable firewalld
+  ansible.builtin.systemd:
+    name: firewalld.service
+    enabled: yes
+    state: started
+    masked: no
+  register: firewalld_service
+
+- name: Firewall - Firewalld Tor Exit Notice rule
+  ansible.posix.firewalld:
+    port: "{{ tor_dirport }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  notify: Restart firewalld
+  when:
+    - firewalld_service is not skipped
+    - tor_exit_notice_enabled | bool
+
+- name: Firewall - Firewalld Tor Relay rule
+  ansible.posix.firewalld:
+    port: "{{ tor_orport }}/tcp"
+    permanent: yes
+    immediate: yes
+    state: enabled
+  notify: Restart firewalld
+  when:
+    - firewalld_service is not skipped
+
+- name: Firewall - Enable public firewalld zone
+  ansible.posix.firewalld:
+    zone: public
+    interface: "{{ ansible_default_ipv4.interface }}"
+    permanent: yes
+    state: enabled
+  notify: Restart firewalld

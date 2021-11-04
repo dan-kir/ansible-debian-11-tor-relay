@@ -16,7 +16,7 @@ tor_exit_notice_enabled: yes
 
 tor_nickname: "{{ machine_hostname }}"
 
-tor_contact_info: "admin@email.com"
+tor_contact_info: admin@email.com
 
 tor_bandwidth_rate: 1 #MBytes
 tor_bandwidth_burst: 3 #MBytes

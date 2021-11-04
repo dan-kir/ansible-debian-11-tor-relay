@@ -1,3 +1,4 @@
+---
 - name: Restart firewalld
   ansible.builtin.systemd:
     name: firewalld.service

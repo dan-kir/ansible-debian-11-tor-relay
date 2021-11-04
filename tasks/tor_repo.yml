@@ -1,5 +1,5 @@
 ---
-- name: Install prerequisite packages
+- name: Tor Repo - Install prerequisite packages
   ansible.builtin.apt:
     name: "{{ packages }}"
   vars:
@@ -8,13 +8,13 @@
     - apt-transport-https
     - gnupg
 
-- name: Install Tor Project signing key
+- name: Tor Repo - Install Tor Project signing key
   ansible.builtin.apt_key:
     url: https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc
     id: A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89
     state: present
 
-- name: Configure torproject.org repository
+- name: Tor Repo - Configure torproject.org repository
   ansible.builtin.apt_repository:
     repo: 'deb https://deb.torproject.org/torproject.org {{ tor_distribution_release }} main'
     state: present

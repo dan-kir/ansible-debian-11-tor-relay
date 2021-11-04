@@ -1,0 +1,9 @@
+---
+## firewalld configuration
+firewalld_config:
+  - parameter: DefaultZone
+    value: public
+    config: /etc/firewalld/firewalld.conf
+  - parameter: FirewallBackend
+    value: nftables
+    config: /etc/firewalld/firewalld.conf

@@ -1,11 +1,17 @@
 ---
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
 - ansible.builtin.import_tasks: tor_repo.yml
+- ansible.builtin.import_tasks: firewall.yml
+  when:
+    - tor_firewalld_config_enabled | bool
 
 - name: Install Tor packages
   ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
-    update_cache: yes
   vars:
     packages:
     - deb.torproject.org-keyring
@@ -50,39 +56,6 @@
     sysctl_set: yes
     state: present
     reload: yes
-
-- name: Start and enable firewalld
-  ansible.builtin.systemd:
-    name: firewalld.service
-    enabled: yes
-    state: started
-    masked: no
-  register: firewalld_service
-  when:
-    - tor_firewalld_config_enabled | bool
-
-- name: Firewalld Tor Exit Notice rule
-  ansible.posix.firewalld:
-    port: "{{ tor_dirport }}/tcp"
-    permanent: yes
-    immediate: yes
-    state: enabled
-  notify: Restart firewalld
-  when:
-    - firewalld_service is not skipped
-    - tor_exit_notice_enabled | bool
-    - tor_firewalld_config_enabled | bool
-
-- name: Firewalld Tor Relay rule
-  ansible.posix.firewalld:
-    port: "{{ tor_orport }}/tcp"
-    permanent: yes
-    immediate: yes
-    state: enabled
-  notify: Restart firewalld
-  when:
-    - firewalld_service is not skipped
-    - tor_firewalld_config_enabled | bool
 
 - name: Start and enable tor
   ansible.builtin.systemd:
