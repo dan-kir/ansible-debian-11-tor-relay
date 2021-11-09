@@ -27,6 +27,7 @@ tor_exit_notice_file: tor-exit-notice.html
 tor_data_dir: /var/lib/tor
 tor_config_dir: /etc/tor/
 
+## Only relevent when exit enabled
 tor_exit_policy:
   - accept *:20-21     # FTP
   - accept *:43        # WHOIS

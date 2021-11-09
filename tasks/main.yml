@@ -1,5 +1,5 @@
 ---
-- name: Update apt cache
+- name: Tor Relay - Update apt cache
   ansible.builtin.apt:
     update_cache: yes
 
@@ -8,7 +8,7 @@
   when:
     - tor_firewalld_config_enabled | bool
 
-- name: Install Tor packages
+- name: Tor Relay - Install Tor packages
   ansible.builtin.apt:
     name: "{{ packages }}"
     state: present
@@ -20,7 +20,7 @@
     - nyx
     - unbound
 
-- name: Ensure Tor config directory exists
+- name: Tor Relay - Ensure Tor config directory exists
   ansible.builtin.file:
     path: "{{ tor_config_dir }}"
     state: directory
@@ -28,7 +28,7 @@
     group: "{{ tor_user }}"
     mode: 0755
 
-- name: Install torrc configuration file
+- name: Tor Relay - Install torrc configuration file
   ansible.builtin.template:
     src: torrc.j2
     dest: "/etc/tor/torrc"
@@ -37,7 +37,7 @@
     mode: 0644
   notify: Restart tor
 
-- name: Install Tor exit notice
+- name: Tor Relay - Install Tor exit notice
   ansible.builtin.template:
     src: tor_exit_notice.html.j2
     dest: "/etc/tor/tor-exit-notice.html"
@@ -48,7 +48,7 @@
     - tor_exit_notice_enabled | bool
   notify: Restart tor
 
-- name: Enable IPv4 packet forwarding in sysctl.conf
+- name: Tor Relay - Enable IPv4 packet forwarding in sysctl.conf
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: '1'
@@ -57,7 +57,7 @@
     state: present
     reload: yes
 
-- name: Start and enable tor
+- name: Tor Relay - Start and enable tor
   ansible.builtin.systemd:
     name: tor@default.service
     enabled: yes
