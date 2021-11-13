@@ -18,9 +18,9 @@ tor_nickname: "{{ machine_hostname }}"
 
 tor_contact_info: admin@email.com
 
-tor_bandwidth_rate: 1 #MBytes
+tor_bandwidth_rate: 1.5 #MBytes
 tor_bandwidth_burst: 3 #MBytes
-tor_accounting_max: 80 #GBytes
+tor_accounting_max: 100 #GBytes
 
 tor_exit_notice_file: tor-exit-notice.html
 

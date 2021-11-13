@@ -13,6 +13,7 @@ BandwidthBurst {{ tor_bandwidth_burst }} MBytes
 AccountingStart day 0:00
 AccountingMax {{ tor_accounting_max }} GBytes
 AccountingRule sum
+Sandbox 1
 {% if tor_exit_enabled | bool %}
 {% for entry in tor_exit_policy %}
 ExitPolicy {{entry}}
