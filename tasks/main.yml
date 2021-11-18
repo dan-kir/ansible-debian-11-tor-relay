@@ -57,6 +57,15 @@
     state: present
     reload: yes
 
+- name: Tor Relay - Expand local port range in sysctl.conf
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_local_port_range
+    value: '15000 64000'
+    sysctl_file: /etc/sysctl.conf
+    sysctl_set: yes
+    state: present
+    reload: yes
+
 - name: Tor Relay - Start and enable tor
   ansible.builtin.systemd:
     name: tor@default.service
